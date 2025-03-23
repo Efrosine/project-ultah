@@ -1,0 +1,117 @@
+/* Reset dasar */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    overflow-x: hidden;
+    background: #f0f0f0;
+}
+
+/* Hero Section */
+.hero {
+    height: 100vh;
+    background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: #fff;
+    padding: 20px;
+    flex-direction: column;
+}
+
+.hero h1 {
+    font-size: 3rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Piano Section */
+.piano-section {
+    padding: 50px 20px;
+    background: #fff;
+    min-height: 100vh;
+    text-align: center;
+}
+
+/* Container untuk piano dan falling notes */
+.piano-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+/* Piano Keys */
+.piano {
+    user-select: none;
+    margin-top: 250px;
+}
+
+.key {
+    width: 60px;
+    height: 200px;
+    margin: 1px;
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    display: inline-block;
+    position: relative;
+    transition: background 0.1s, transform 0.1s;
+    cursor: pointer;
+}
+
+.key.pressed {
+    background: #ffd700;
+    transform: translateY(4px);
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.key span {
+    position: absolute;
+    bottom: 5px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-weight: bold;
+    color: #333;
+}
+
+/* Falling note style */
+.falling-note {
+    position: absolute;
+    width: 50px;
+    height: 20px;
+    background: rgba(255, 215, 0, 0.8);
+    border-radius: 4px;
+    text-align: center;
+    line-height: 20px;
+    font-weight: bold;
+    color: #333;
+    pointer-events: none;
+    animation: fall 2s linear forwards;
+}
+
+@keyframes fall {
+    0% {
+        top: -30px;
+        /* opacity: 1; */
+    }
+
+    100% {
+        top: 220px;
+        /* Sesuaikan dengan tinggi piano */
+        /* opacity: 0; */
+    }
+}
+
+/* Horizontal guide line */
+.guide-line {
+    position: absolute;
+    width: 100%;
+    height: 2px;
+    background: red;
+    top: 220px;
+    /* Match the falling note's final position */
+    z-index: 1;
+}
