@@ -98,6 +98,15 @@
           /* opacity: 0; */
         }
       }
+      /* Horizontal guide line */
+      .guide-line {
+        position: absolute;
+        width: 100%;
+        height: 2px;
+        background: red;
+        top: 220px; /* Match the falling note's final position */
+        z-index: 1;
+      }
     </style>
   </head>
   <body>
@@ -118,6 +127,8 @@
       <p>Tekan tombol: A, S, D, F, J, K, L, ;</p>
       <!-- Pembungkus piano (relative) untuk falling notes -->
       <div class="piano-wrapper">
+        <!-- Horizontal guide line -->
+        <div class="guide-line"></div>
         <!-- Container Falling Notes -->
         <div id="fallingNotesContainer"></div>
         <!-- Piano Keys -->
