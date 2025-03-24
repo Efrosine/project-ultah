@@ -11,6 +11,10 @@ body {
     background: #f0f0f0;
 }
 
+.no-scroll {
+    overflow: hidden;
+}
+
 /* Hero Section */
 .hero {
     height: 100vh;
@@ -35,18 +39,28 @@ body {
     background: #fff;
     min-height: 100vh;
     text-align: center;
+    display: flex;
+    flex-direction: column;
 }
 
 /* Container untuk piano dan falling notes */
 .piano-wrapper {
     position: relative;
     display: inline-block;
+    width: 100%;
+    min-height: 300px;
+    flex-grow: 1;
+    /* Mengisi ruang yang tersisa */
 }
 
 /* Piano Keys */
 .piano {
     user-select: none;
-    margin-top: 250px;
+    position: absolute;
+    display: flex;
+    bottom: 0px;
+    left: 50%;
+    transform: translateX(-50%);
 }
 
 .key {
@@ -81,27 +95,32 @@ body {
 .falling-note {
     position: absolute;
     width: 50px;
-    height: 20px;
+    height: 30px;
     background: rgba(255, 215, 0, 0.8);
     border-radius: 4px;
     text-align: center;
-    line-height: 20px;
+    line-height: 30px;
     font-weight: bold;
     color: #333;
     pointer-events: none;
     animation: fall 2s linear forwards;
+    animation-play-state: running;
+    /* Default: animasi berjalan */
 }
 
 @keyframes fall {
     0% {
-        top: -30px;
-        /* opacity: 1; */
+        top: calc(50% - 230px);
+        opacity: 1;
+    }
+
+    85% {
+        opacity: 1;
     }
 
     100% {
-        top: 220px;
-        /* Sesuaikan dengan tinggi piano */
-        /* opacity: 0; */
+        top: calc(100% - 200px - 30px);
+        opacity: 0;
     }
 }
 
@@ -109,9 +128,9 @@ body {
 .guide-line {
     position: absolute;
     width: 100%;
-    height: 2px;
+    height: 6px;
     background: red;
-    top: 220px;
-    /* Match the falling note's final position */
+    opacity: 0.5;
+    bottom: 280px;
     z-index: 1;
 }
