@@ -71,6 +71,9 @@ document.querySelectorAll(".key").forEach((keyElement) => {
   });
 });
 
+// Disable scrolling on page load
+// document.body.classList.add("no-scroll");
+
 // Tombol untuk memulai AudioContext
 const startButton = document.getElementById("startButton");
 startButton.addEventListener("click", () => {
@@ -79,17 +82,18 @@ startButton.addEventListener("click", () => {
   }
   startButton.style.display = "none"; // Sembunyikan tombol setelah diklik
 
+  // Re-enable scrolling
+  //   document.body.classList.remove("no-scroll");
+
   // Scroll ke bagian piano
   document
     .getElementById("pianoSection")
     .scrollIntoView({ behavior: "smooth" });
 
   // Mulai tutorial falling notes
-  tutorialSequence.forEach((noteObj) => {
-    setTimeout(() => {
-      createFallingNote(noteObj);
-    }, noteObj.delay + 4000);
-  });
+  currentNoteIndex = 0; // Reset indeks note
+  isPaused = false; // Pastikan tidak dalam status jeda
+  startTutorial(); // Mulai tutorial
 });
 
 // Tutorial Falling Notes untuk lagu "Happy Birthday"
@@ -130,6 +134,9 @@ const tutorialSequence = [
   { key: "f", delay: 19800 },
 ];
 
+let isPaused = false; // Status jeda
+let currentNoteIndex = 0; // Indeks note yang sedang diproses
+let timeoutId = null; // ID untuk timeout yang sedang berjalan
 const FALL_DURATION = 2000; // durasi animasi jatuh (ms)
 
 // Fungsi untuk membuat falling note
@@ -151,13 +158,76 @@ function createFallingNote(noteObj) {
   fallingNote.style.left = left + "px";
   fallingNote.innerText = key.toUpperCase();
 
+  // Tambahkan properti untuk melacak waktu
+  fallingNote.startTime = Date.now(); // Waktu mulai
+  fallingNote.remainingTime = FALL_DURATION; // Durasi penuh
+
   // Tempatkan falling note ke container
   document.getElementById("fallingNotesContainer").appendChild(fallingNote);
 
-  // Setelah animasi selesai, hapus falling note
-  setTimeout(() => {
+  // Fungsi untuk menghapus note setelah durasi selesai
+  const removeNote = () => {
     fallingNote.remove();
-    // Simulasi animasi key
-    const note = keyElement.getAttribute("data-note");
-  }, FALL_DURATION);
+  };
+
+  // Simpan timeout ID untuk penghapusan
+  fallingNote.timeoutId = setTimeout(removeNote, FALL_DURATION);
 }
+
+// Fungsi untuk menjeda animasi dan penghapusan falling notes
+function pauseFallingNotes() {
+  const fallingNotes = document.querySelectorAll(".falling-note");
+  fallingNotes.forEach((note) => {
+    const elapsedTime = Date.now() - note.startTime; // Waktu yang telah berlalu
+    note.remainingTime -= elapsedTime; // Hitung waktu tersisa
+    clearTimeout(note.timeoutId); // Batalkan penghapusan
+    note.style.animationPlayState = "paused"; // Jeda animasi
+  });
+}
+
+// Fungsi untuk melanjutkan animasi dan penghapusan falling notes
+function resumeFallingNotes() {
+  const fallingNotes = document.querySelectorAll(".falling-note");
+  fallingNotes.forEach((note) => {
+    note.startTime = Date.now(); // Reset waktu mulai
+    note.timeoutId = setTimeout(() => {
+      note.remove();
+    }, note.remainingTime); // Atur ulang penghapusan
+    note.style.animationPlayState = "running"; // Lanjutkan animasi
+  });
+}
+
+// Event listener untuk keydown tombol "P" (Pause/Resume)
+window.addEventListener("keydown", (e) => {
+  if (e.key.toLowerCase() === "p") {
+    isPaused = !isPaused;
+    if (isPaused) {
+      pauseFallingNotes();
+    } else {
+      resumeFallingNotes();
+    }
+  }
+});
+
+// Fungsi untuk memulai tutorial falling notes
+function startTutorial() {
+  if (currentNoteIndex >= tutorialSequence.length) return; // Jika semua note sudah dibuat, hentikan
+
+  const noteObj = tutorialSequence[currentNoteIndex];
+  timeoutId = setTimeout(() => {
+    if (!isPaused) {
+      createFallingNote(noteObj);
+      currentNoteIndex++; // Lanjutkan ke note berikutnya
+      startTutorial(); // Panggil fungsi ini lagi untuk note berikutnya
+    }
+  }, noteObj.delay - (currentNoteIndex > 0 ? tutorialSequence[currentNoteIndex - 1].delay : 0));
+}
+
+// Event listener untuk keydown tombol "O" (Start Tutorial)
+window.addEventListener("keydown", (e) => {
+  if (e.key.toLowerCase() === "o") {
+    currentNoteIndex = 0; // Reset indeks note
+    isPaused = false; // Pastikan tidak dalam status jeda
+    startTutorial(); // Mulai tutorial
+  }
+});
