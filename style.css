@@ -1,136 +1,81 @@
+@import "tailwindcss";
+
 /* Reset dasar */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+@layer base {
+  * {
+    @apply m-0 p-0 box-border;
+  }
 
-body {
-    font-family: Arial, sans-serif;
-    overflow-x: hidden;
-    background: #f0f0f0;
-}
+  body {
+    @apply font-sans overflow-x-hidden bg-gray-100;
+  }
 
-.no-scroll {
-    overflow: hidden;
+  .no-scroll {
+    @apply overflow-hidden;
+  }
 }
 
 /* Hero Section */
-.hero {
-    height: 100vh;
-    background: linear-gradient(135deg, #ff9a9e, #fad0c4);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    color: #fff;
-    padding: 20px;
-    flex-direction: column;
-}
+@layer components {
+  .hero {
+    @apply h-screen bg-gradient-to-r from-pink-400 to-pink-200 flex flex-col justify-center items-center text-center text-white p-5;
+  }
 
-.hero h1 {
-    font-size: 3rem;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  .hero h1 {
+    @apply text-3xl shadow-md;
+  }
 }
 
 /* Piano Section */
-.piano-section {
-    padding: 50px 20px;
-    background: #fff;
-    min-height: 100vh;
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-}
+@layer components {
+  .piano-section {
+    @apply py-12 px-5 bg-white min-h-screen text-center flex flex-col;
+  }
 
-/* Container untuk piano dan falling notes */
-.piano-wrapper {
-    position: relative;
-    display: inline-block;
-    width: 100%;
-    min-height: 300px;
-    flex-grow: 1;
-    /* Mengisi ruang yang tersisa */
-}
+  .piano-wrapper {
+    @apply relative inline-block w-full min-h-[300px] flex-grow;
+  }
 
-/* Piano Keys */
-.piano {
-    user-select: none;
-    position: absolute;
-    display: flex;
-    bottom: 0px;
-    left: 50%;
-    transform: translateX(-50%);
-}
+  .piano {
+    @apply select-none absolute flex bottom-0 left-1/2 -translate-x-1/2;
+  }
 
-.key {
-    width: 60px;
-    height: 200px;
-    margin: 1px;
-    background: white;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    display: inline-block;
-    position: relative;
-    transition: background 0.1s, transform 0.1s;
-    cursor: pointer;
-}
+  .key {
+    @apply w-15 h-50 m-0.5 bg-white border border-gray-300 rounded relative transition-all duration-100 cursor-pointer;
+  }
 
-.key.pressed {
-    background: #ffd700;
-    transform: translateY(4px);
-    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);
-}
+  .key.pressed {
+    @apply bg-yellow-400 translate-y-1 shadow-inner;
+  }
 
-.key span {
-    position: absolute;
-    bottom: 5px;
-    left: 50%;
-    transform: translateX(-50%);
-    font-weight: bold;
-    color: #333;
-}
+  .key span {
+    @apply absolute bottom-1 left-1/2 -translate-x-1/2 font-bold text-gray-800;
+  }
 
-/* Falling note style */
-.falling-note {
-    position: absolute;
-    width: 50px;
-    height: 30px;
-    background: rgba(255, 215, 0, 0.8);
-    border-radius: 4px;
-    text-align: center;
-    line-height: 30px;
-    font-weight: bold;
-    color: #333;
-    pointer-events: none;
+  .falling-note {
     animation: fall 2s linear forwards;
     animation-play-state: running;
-    /* Default: animasi berjalan */
+    @apply absolute w-12 h-7 bg-yellow-300/80 rounded text-center leading-7 font-bold text-gray-800 pointer-events-none;
+  }
+
+  .guide-line {
+    @apply absolute w-full h-1.5 bg-red-500 opacity-50 bottom-[280px] z-10;
+  }
 }
 
-@keyframes fall {
+/* Keyframes */
+@layer utilities {
+  @keyframes fall {
     0% {
-        top: calc(50% - 230px);
-        opacity: 1;
+      top: calc(50% - 230px);
+      opacity: 1;
     }
-
     85% {
-        opacity: 1;
+      opacity: 1;
     }
-
     100% {
-        top: calc(100% - 200px - 30px);
-        opacity: 0;
+      top: calc(100% - 200px - 30px);
+      opacity: 0;
     }
-}
-
-/* Horizontal guide line */
-.guide-line {
-    position: absolute;
-    width: 100%;
-    height: 6px;
-    background: red;
-    opacity: 0.5;
-    bottom: 280px;
-    z-index: 1;
+  }
 }
